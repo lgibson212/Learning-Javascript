@@ -1,0 +1,90 @@
+correct the time string kata
+level 7
+
+Description
+You have to create a method, that corrects a given time string. There was a problem in addition, so many of the time strings are broken. Time-Format is european. So from "00:00:00" to "23:59:59". 
+
+Some examples:
+"09:10:01" -> "09:10:01"
+"11:70:10" -> "12:10:10"
+"19:99:99" -> "20:40:39"
+"24:01:01" -> "00:01:01"
+
+If the input-string is null or empty return exactly this value!
+If the time-string-format is invalid, return null. 
+
+Invalid Format
+Test.assertEquals(timeCorrect("001122"), null);
+Test.assertEquals(timeCorrect("00;11;22"), null);
+Test.assertEquals(timeCorrect("0a:1c:22"), null);
+
+My Notes
+
+first two digits must be < 24
+second two must be <60
+last two must be <60
+
+MUST WORK FROM Right to Left...
+
+if last set goes over 60, subtract 60 from, and add 1 to the set left of it.
+repeat for middle set.
+if first set goes over 23, subtract 24 from it.
+
+split into 3 separate arrays to deal with each set.
+
+
+My Solution
+
+function timeCorrect(timestring) {
+
+if (timestring === null)
+{return null;}
+if (timestring === "")
+{return "";}
+if (! timestring.match(/\d\d:\d\d:\d\d/))
+{return null;}
+
+  var myArray = timestring.split(":");
+  var hours = parseInt(myArray[0]);
+  var minutes = parseInt(myArray[1]);
+  var seconds = parseInt(myArray[2]);
+  var correctSeconds=[];
+  var correctMinutes=[];
+  var correctHours=[];
+
+ if (seconds>59) {
+ 	seconds %=60;
+ 	minutes += Math.floor(seconds/60);
+ 	 	correctSeconds.push(seconds);
+ }
+ 	else {correctSeconds.push(seconds);}
+ 	
+ if (minutes<60) {
+ 	 	correctMinutes.push(minutes);
+ }
+ 	else {
+ 		minutes %=60;
+ 		hours += Math.floor(minutes/60);
+ 		correctMinutes.push(minutes);}
+ 
+ if (hours<24) {
+ 	 	correctHours.push(hours);
+ }
+ 	else {
+ 		hours %=24;
+ 	 	correctHours.push(hours);
+ }
+
+if (correctHours<10)
+	correctHours = "0" + correctHours;
+if (correctMinutes<10)
+	correctMinutes = "0" + correctMinutes;
+if (correctSeconds<10)
+	correctSeconds = "0" + correctSeconds;
+
+
+return  correctHours + ":" + correctMinutes + ":" + correctSeconds;
+
+}
+
+timeCorrect("52:01:91")
